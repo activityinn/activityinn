@@ -1,0 +1,33 @@
+{
+  "name": "activityinn",
+  "version": "0.1.0",
+  "description": "An activitypub framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run lint & npm run mocha",
+    "mocha": "npx nyc --reporter=text --reporter=text-summary npx mocha",
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/activityinn/activityinn.git"
+  },
+  "keywords": [
+    "activitypub"
+  ],
+  "author": "Sajjad Heydari <MCSHEMAIL@GMAIL.COM>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/activityinn/activityinn/issues"
+  },
+  "homepage": "https://github.com/activityinn/activityinn#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.12.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0"
+  },
+  "dependencies": {
+    "sequelize": "^4.42.0"
+  }
+}
