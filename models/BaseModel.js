@@ -34,8 +34,6 @@ module.exports = class BaseModel{
   }
 
   static __dodb(db){
-    console.log(this.__dbname())
     db.define(this.__dbname(), this.__todb());
-    // TODO
   }
 };
