@@ -49,6 +49,29 @@ describe('Basic models', function(){
 
   });
 
+  it('should call db.define ONCE', function() {
+    class SampleModel extends BaseModel{
+      constructor(){
+        super();
+
+        this.setBaseName('samplemodel');
+        this.addField('title', new models.STRING());
+      }
+    }
+
+    let db = {
+      define: function(){return true;}
+    };
+
+    chai.spy.on(db, 'define');
+
+    SampleModel.__dodb(db);
+    SampleModel.__dodb(db);
+
+    expect(db.define).to.be.called.once;
+
+  });
+
 });
 
 describe('Models fields', function(){
@@ -241,7 +264,36 @@ describe('Models to ORM', function() {
   });
 
   describe('FOREIGN KEY', function(){
-    it('should have test');
+    it('should handle base case', function(){
+      class T1 extends BaseModel{
+        constructor(){
+          super();
+          this.setBaseName('t1');
+        }
+      }
+
+      class T2 extends BaseModel{
+        constructor(){
+          super();
+          this.setBaseName('t2');
+          this.addRelation(new models.relation.foreignkey(T1));
+        }
+      }
+
+      let db = {
+        define: function(){
+          return {
+            belongsTo: chai.spy()
+          };
+        }
+      };
+
+      let t1model = T1.__dodb(db);
+      let t2model = T2.__dodb(db);
+
+      expect(t2model.belongsTo).to.have.been.called.with(t1model);
+    });
+
   });
   
 

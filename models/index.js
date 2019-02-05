@@ -61,17 +61,23 @@ class DATETIME extends BaseField{
   }
 }
 
+class BaseRelation{
+  constructor(model){
+    this.model = model;
+  }
+}
+
 const FOREIGNKEY_SYMBOL = Symbol('FOREIGNKEY');
-const foreignkey = function(model){
-  return {
-    type: FOREIGNKEY_SYMBOL,
-    model,
-  };
-};
+class foreignkey extends BaseRelation{
+  setup(m){
+    m.belongsTo(this.model.__dodb());
+  }
+}
 
 module.exports = {
   BaseModel,
   BaseField,
+  BaseRelation,
   STRING,
   STRING_SYMBOL,
   TEXT,

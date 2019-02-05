@@ -1,11 +1,16 @@
 module.exports = class BaseModel{
   constructor(){
-    this.__relations = {};
+    this.__fields = {};
+    this.__relations = [];
   }
 
   addField(name, type){
     // TODO
-    this.__relations[name] = type;
+    this.__fields[name] = type;
+  }
+
+  addRelation(rel){
+    this.__relations.push(rel);
   }
 
   setBaseName(name){
@@ -15,16 +20,16 @@ module.exports = class BaseModel{
   static __todb(){
     let sample = new this();
 
-    let relations = sample.__relations;
+    let fields = sample.__fields;
 
-    let db = {};
+    let ans = {};
 
-    for (let item in relations){
-      let conf = relations[item];
-      db[item] = conf.todb();
+    for (let item in fields){
+      let conf = fields[item];
+      ans[item] = conf.todb();
     }
 
-    return db;
+    return ans;
   }
 
   static __dbname(){
@@ -34,6 +39,16 @@ module.exports = class BaseModel{
   }
 
   static __dodb(db){
-    db.define(this.__dbname(), this.__todb());
+    if(typeof this.__dbmodel !== 'undefined')
+      return this.__dbmodel;
+    this.__dbmodel = db.define(this.__dbname(), this.__todb());
+
+    let sample = new this();
+
+    for(let rel of sample.__relations){
+      rel.setup(this.__dbmodel);
+    }
+
+    return this.__dbmodel;
   }
 };
