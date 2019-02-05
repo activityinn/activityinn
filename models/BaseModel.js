@@ -9,7 +9,7 @@ module.exports = class BaseModel{
   }
 
   setBaseName(name){
-    this._basename = name;
+    this.__basename = name;
   }
 
   static __todb(){
@@ -31,5 +31,11 @@ module.exports = class BaseModel{
     let sample = new this();
 
     return sample.__basename;
+  }
+
+  static __dodb(db){
+    console.log(this.__dbname())
+    db.define(this.__dbname(), this.__todb());
+    // TODO
   }
 };

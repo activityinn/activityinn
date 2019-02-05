@@ -1,6 +1,10 @@
 const chai = require('chai');
+const spies = require('chai-spies');
+chai.use(spies);
 const expect = chai.expect;
 // const assert = chai.assert;
+
+const Sequelize = require('sequelize');
 
 describe('Basic models', function(){
   const models = require('..').models;
@@ -18,6 +22,33 @@ describe('Basic models', function(){
     expect(test.setBaseName).to.be.a('function');
   });
   
+  it('dodb should call db.define with the correct params', function(){
+
+    class SampleModel extends BaseModel{
+      constructor(){
+        super();
+
+        this.setBaseName('samplemodel');
+        this.addField('title', new models.STRING());
+      }
+    }
+
+    let db = {
+      define: function(){}
+    };
+
+    chai.spy.on(db, 'define');
+
+    SampleModel.__dodb(db);
+
+    expect(db.define).to.be.called.with('samplemodel', {
+      title: {
+        type: Sequelize.STRING,
+      }
+    });
+
+  });
+
 });
 
 describe('Models fields', function(){
@@ -55,7 +86,6 @@ describe('Models fields', function(){
 });
 
 describe('Models to ORM', function() {
-  const Sequelize = require('sequelize');
   const models = require('..').models;
   const BaseModel = models.BaseModel;
   const BaseField = models.BaseField;
