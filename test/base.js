@@ -26,19 +26,22 @@ describe('Inn Class', function() {
   });
 
   it('should call dodb on models after setup', function() {
-    let inn = new Inn();
-    class Test extends Inn.models.BaseModel{}
-    chai.spy.on(Test, 'dodb');
+    let inn = new Inn({useActivity: false});
+    class Test extends Inn.models.BaseModel{
+      static __dodb(){
+      }
+    }
+    chai.spy.on(Test, '__dodb');
 
     inn.register(Test);
     inn.setup();
 
-    expect(Test.dodb).to.have.been.called.with(inn.db);
+    expect(Test.__dodb).to.have.been.called.with(inn.db);
 
   });
   
   it('should call setup in start', function() {
-    let inn = new Inn();
+    let inn = new Inn({useActivity: false});
     chai.spy.on(inn, 'setup');
 
     inn.start();
